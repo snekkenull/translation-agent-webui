@@ -21,7 +21,18 @@ def lang_detector(text):
 def tokenize(text):
     # Use polyglot to tokenize the text
     polyglot_text = Text(text)
-    return polyglot_text.words
+    words = polyglot_text.words
+
+    # Check if the text contains spaces
+    if ' ' in text:
+        # Create a list of words and spaces
+        tokens = []
+        for word in words:
+            tokens.append(word)
+            tokens.append(' ')  # Add space after each word
+        return tokens[:-1]  # Remove the last space
+    else:
+        return words
 
 def diff_texts(text1, text2):
     tokens1 = tokenize(text1)
@@ -42,6 +53,7 @@ def diff_texts(text1, text2):
             continue  # Ignore the hints line
 
         highlighted_text.append((word, category))
+        ic(highlighted_text)
 
     return highlighted_text
 
@@ -78,13 +90,19 @@ def huanik(
         combine_adjacent=True,
         show_legend=True,
         visible=True,
-        color_map={"added": "green", "removed": "red"})
+        color_map={"removed": "red", "added": "green"})
 
     return init_translation, reflect_translation, final_translation, final_diff
 
 TITLE = """
 <h1><a href="https://github.com/andrewyng/translation-agent">Translation-Agent</a> webUI</h1>
-<center>Using LLama-index, Groq(Default)</center>
+<center>
+Default to using Groq API and llama3-70b models
+<br>
+Change to OpenAI, Cohere, TogetherAI, Ollama with API and Model
+<br>
+Source Language auto detected, input your Target language and country.
+</center>
 """
 CSS = """
     h1 {
@@ -93,6 +111,9 @@ CSS = """
     }
     footer {
         visibility: hidden;
+    }
+    .texts {
+        min-height: 100px;
     }
 """
 
@@ -129,13 +150,14 @@ with gr.Blocks(theme="soft", css=CSS) as demo:
                 value="How we live is so different from how we ought to live that he who studies "+\
                 "what ought to be done rather than what is done will learn the way to his downfall "+\
                 "rather than to his preservation.",
+                elem_classes="texts",
             )
             with gr.Tab("Final"):
-                output_final = gr.Textbox(label="FInal Translation")
+                output_final = gr.Textbox(label="FInal Translation", elem_classes="texts")
             with gr.Tab("Initial"):
-                output_init = gr.Textbox(label="Init Translation")
+                output_init = gr.Textbox(label="Init Translation", elem_classes="texts")
             with gr.Tab("Reflection"):
-                output_reflect = gr.Textbox(label="Reflection")
+                output_reflect = gr.Markdown(label="Reflection")
             with gr.Tab("Diff"):
                 output_diff = gr.HighlightedText(visible = False)
     with gr.Row():
