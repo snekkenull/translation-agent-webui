@@ -13,6 +13,7 @@ from llama_index.llms.cohere import Cohere
 from llama_index.llms.openai import OpenAI
 from llama_index.llms.together import TogetherLLM
 from llama_index.llms.ollama import Ollama
+from llama_index.llms.huggingface_api import HuggingFaceInferenceAPI
 
 from llama_index.core import Settings
 from llama_index.core.llms import ChatMessage
@@ -64,7 +65,17 @@ def model_load(
         llm = Ollama(
             model=model,
             request_timeout=120.0)
+    elif endpoint == "Huggingface":
+        llm = HuggingFaceInferenceAPI(
+            model_name=model,
+            task="text-generation",
+        )
     Settings.llm = llm
+    # maximum input size to the LLM
+    Settings.context_window = 4096
+
+    # number of tokens reserved for text generation.
+    Settings.num_output = 512
 
 def get_completion(
     prompt: str,
@@ -89,29 +100,41 @@ def get_completion(
             If json_mode is True, returns the complete API response as a dictionary.
             If json_mode is False, returns the generated text as a string.
     """
-
-    messages = [
-        ChatMessage(
-            role="system", content=system_message),
-        ChatMessage(
-            role="user", content=prompt),
-    ]
-
-    if json_mode:
+    if llm.class_name() == "HuggingFaceInferenceAPI":
+        llm.system_prompt = system_message
+        messages = [
+            ChatMessage(
+                role="user", content=prompt),
+        ]
         response = llm.chat(
+            messages=messages,
             temperature=temperature,
             top_p=1,
-            response_format={"type": "json_object"},
-            messages=messages,
         )
         return response.message.content
     else:
-        response = llm.chat(
-            temperature=temperature,
-            top_p=1,
-            messages=messages,
-        )
-        return response.message.content
+        messages = [
+            ChatMessage(
+                role="system", content=system_message),
+            ChatMessage(
+                role="user", content=prompt),
+        ]
+
+        if json_mode:
+            response = llm.chat(
+                temperature=temperature,
+                top_p=1,
+                response_format={"type": "json_object"},
+                messages=messages,
+            )
+            return response.message.content
+        else:
+            response = llm.chat(
+                temperature=temperature,
+                top_p=1,
+                messages=messages,
+            )
+            return response.message.content
 
 
 def one_chunk_initial_translation(

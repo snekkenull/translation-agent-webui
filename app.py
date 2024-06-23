@@ -34,6 +34,7 @@ def tokenize(text):
     else:
         return words
 
+
 def diff_texts(text1, text2):
     tokens1 = tokenize(text1)
     tokens2 = tokenize(text2)
@@ -95,10 +96,15 @@ def huanik(
 
 TITLE = """
 <h1><a href="https://github.com/andrewyng/translation-agent">Translation-Agent</a> webUI</h1>
+"""
+
+DESCRIPTION = """
 <center>
-Default to using Groq API and llama3-70b model
+Using Groq and Llama3-70b by default.
 <br>
-Change to OpenAI, Cohere, TogetherAI, Ollama with your API and Model
+Change to OpenAI, Cohere, TogetherAI, Ollama with API and Model.
+<br>
+When using Huggingface Inference API, please use HF model id.
 <br>
 Source Language auto detected, input your Target language and country.
 </center>
@@ -112,17 +118,18 @@ CSS = """
         visibility: hidden;
     }
     .texts {
-        min-height: 150px;
+        min-height: 100px;
     }
 """
 
 with gr.Blocks(theme="soft", css=CSS) as demo:
     gr.Markdown(TITLE)
+    gr.Markdown(DESCRIPTION)
     with gr.Row():
         with gr.Column(scale=1):
             endpoint = gr.Dropdown(
                 label="Endpoint",
-                choices=["Groq","OpenAI","Cohere","TogetherAI","Ollama"],
+                choices=["Groq","OpenAI","Cohere","TogetherAI","Ollama","Huggingface"],
                 value="Groq",
             )
             model = gr.Textbox(label="Model", value="llama3-70b-8192", )
@@ -154,7 +161,7 @@ with gr.Blocks(theme="soft", css=CSS) as demo:
             with gr.Tab("Final"):
                 output_final = gr.Textbox(label="FInal Translation", elem_classes="texts")
             with gr.Tab("Initial"):
-                output_init = gr.Textbox(label="Init Translation", elem_classes="texts")
+                output_init = gr.Markdown(label="Init Translation")
             with gr.Tab("Reflection"):
                 output_reflect = gr.Markdown(label="Reflection")
             with gr.Tab("Diff"):
