@@ -53,7 +53,6 @@ def diff_texts(text1, text2):
             continue  # Ignore the hints line
 
         highlighted_text.append((word, category))
-        ic(highlighted_text)
 
     return highlighted_text
 
@@ -97,9 +96,9 @@ def huanik(
 TITLE = """
 <h1><a href="https://github.com/andrewyng/translation-agent">Translation-Agent</a> webUI</h1>
 <center>
-Default to using Groq API and llama3-70b models
+Default to using Groq API and llama3-70b model
 <br>
-Change to OpenAI, Cohere, TogetherAI, Ollama with API and Model
+Change to OpenAI, Cohere, TogetherAI, Ollama with your API and Model
 <br>
 Source Language auto detected, input your Target language and country.
 </center>
@@ -113,7 +112,7 @@ CSS = """
         visibility: hidden;
     }
     .texts {
-        min-height: 100px;
+        min-height: 150px;
     }
 """
 
