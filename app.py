@@ -94,25 +94,36 @@ def huanik(
 
     return init_translation, reflect_translation, final_translation, final_diff
 
+def update_model(endpoint):
+    endpoint_model_map = {
+        "Groq": "llama3-70b-8192",
+        "OpenAI": "gpt-4o",
+        "Cohere": "command-r",
+        "TogetherAI": "Qwen/Qwen2-72B-Instruct",
+        "Ollama": "llama3",
+        "Huggingface": "mistralai/Mistral-7B-Instruct-v0.3"
+    }
+    return gr.update(value=endpoint_model_map[endpoint])
+
 TITLE = """
 <h1><a href="https://github.com/andrewyng/translation-agent">Translation-Agent</a> webUI</h1>
 """
 
 DESCRIPTION = """
-<center>
-Using Groq and Llama3-70b by default.
-<br>
-Change to OpenAI, Cohere, TogetherAI, Ollama with API and Model.
-<br>
-When using Huggingface Inference API, please use HF model id.
-<br>
-Source Language auto detected, input your Target language and country.
-</center>
+- Using Groq and Llama3-70b by default.
+
+- Change to OpenAI, Cohere, TogetherAI, Ollama with API and Model.
+
+- Using Huggingface InferenceAPI(No Key needed), please input HF model id.
+
+- Source Language auto detected, input your Target language and country.
 """
 CSS = """
     h1 {
         text-align: center;
         display: block;
+        height: 10vh;
+        align-content: center;
     }
     footer {
         visibility: hidden;
@@ -124,7 +135,6 @@ CSS = """
 
 with gr.Blocks(theme="soft", css=CSS) as demo:
     gr.Markdown(TITLE)
-    gr.Markdown(DESCRIPTION)
     with gr.Row():
         with gr.Column(scale=1):
             endpoint = gr.Dropdown(
@@ -151,6 +161,7 @@ with gr.Blocks(theme="soft", css=CSS) as demo:
                 step=8,
                 )
         with gr.Column(scale=4):
+            gr.Markdown(DESCRIPTION)
             source_text = gr.Textbox(
                 label="Source Text",
                 value="How we live is so different from how we ought to live that he who studies "+\
@@ -170,6 +181,7 @@ with gr.Blocks(theme="soft", css=CSS) as demo:
         submit = gr.Button(value="Submit")
         clear = gr.ClearButton([source_text, output_init, output_reflect, output_final])
 
+    endpoint.change(fn=update_model, inputs=[endpoint], outputs=[model])
     source_text.change(lang_detector, source_text, source_lang)
     submit.click(fn=huanik, inputs=[endpoint, model, api_key, source_lang, target_lang, source_text, country, max_tokens], outputs=[output_init, output_reflect, output_final, output_diff])
 
