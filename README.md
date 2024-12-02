@@ -1,5 +1,10 @@
 # translation-agent-webui
-A gradio webui for Andrewyng [translation-agent](https://github.com/andrewyng/translation-agent)
+A gradio webui for Andrewyng
+
+# Changelog
+Now the modified App has been merged to [translation-agent App](https://github.com/snekkenull/translation-agent/tree/main/app)
+
+LlaMax3 is an open-source model which collected extensive training sets in 102 languages, try it here. [LlaMAX3 version](https://huggingface.co/spaces/vilarin/LLaMAX3-Translator)
 
 # Features
 - Auto detect input text language
