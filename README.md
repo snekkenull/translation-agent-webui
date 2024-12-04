@@ -2,9 +2,15 @@
 A gradio webui for Andrewyng
 
 # Changelog
-Now the modified App has been merged to [translation-agent App](https://github.com/snekkenull/translation-agent/tree/main/app)
+Now the official App has been merged to [translation-agent App](https://github.com/snekkenull/translation-agent/tree/main/app)
 
-LlaMax3 is an open-source model which collected extensive training sets in 102 languages, try it here. [LlaMAX3 version](https://huggingface.co/spaces/vilarin/LLaMAX3-Translator)
+The official app uses an OpenAI compatible API (Instead of llama-index), resulting in fewer dependencies, a smaller size, and better suitability for local deployment (without polyglot, which caused errors in windows). 
+
+However, some features have been removed, including Google Translate, enhanced automatic language detection, and the HuggingFace API. 
+
+Please choose the version that best meets your needs.
+
+BTW, another one based on the App is LlaMax3-Translation. LlamMax3 is an open-source model which collected extensive training sets in 102 languages, here it is [LlaMAX3 version](https://huggingface.co/spaces/vilarin/LLaMAX3-Translator) in Huggingface Spaces.
 
 # Features
 - Auto detect input text language
