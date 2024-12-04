@@ -1,5 +1,5 @@
 # translation-agent-webui
-A gradio webui for Andrewyng
+A gradio webui for Andrewyng's Translation Agent.
 
 # Changelog
 Now the official App has been merged to [translation-agent App](https://github.com/snekkenull/translation-agent/tree/main/app)
